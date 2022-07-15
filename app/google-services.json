@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1025276691714",
+    "project_id": "vie-project",
+    "storage_bucket": "vie-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025276691714:android:7c9c78814c261154b46e1b",
+        "android_client_info": {
+          "package_name": "com.elthobhy.viefirebaseauth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025276691714-ql5ond7j5f4vgvgvcd5p7kq7qsdtv3ch.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnak5cfsbnHrgX9kodACfsqzhSFDcwSNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1025276691714-ql5ond7j5f4vgvgvcd5p7kq7qsdtv3ch.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
