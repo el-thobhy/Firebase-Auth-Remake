@@ -2,6 +2,7 @@ package com.elthobhy.viefirebaseauth
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.elthobhy.viefirebaseauth.databinding.ActivityForgotPasswordBinding
 
 class ForgotPasswordActivity : AppCompatActivity() {
@@ -14,6 +15,18 @@ class ForgotPasswordActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initActionbar()
+        onClick()
+    }
+
+    private fun onClick() {
+        binding.apply {
+            btnSendEmail.setOnClickListener {
+                Toast.makeText(this@ForgotPasswordActivity,"sent",Toast.LENGTH_SHORT).show()
+            }
+            tbForgotPass.setNavigationOnClickListener {
+                finish()
+            }
+        }
     }
 
     private fun initActionbar() {

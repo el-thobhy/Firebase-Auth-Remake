@@ -1,6 +1,8 @@
 package com.elthobhy.viefirebaseauth
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.elthobhy.viefirebaseauth.databinding.ActivitySignUpBinding
 
@@ -14,6 +16,18 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initActionBar()
+        onClick()
+    }
+
+    private fun onClick() {
+        binding.apply {
+            btnSignUp.setOnClickListener {
+                startActivity(Intent(this@SignUpActivity,SignInActivity::class.java))
+            }
+            tbSignUp.setNavigationOnClickListener{
+                finish()
+            }
+        }
     }
 
     private fun initActionBar() {

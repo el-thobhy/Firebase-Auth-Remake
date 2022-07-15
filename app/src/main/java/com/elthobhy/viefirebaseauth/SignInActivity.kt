@@ -1,5 +1,6 @@
 package com.elthobhy.viefirebaseauth
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.elthobhy.viefirebaseauth.databinding.ActivitySigninBinding
@@ -14,6 +15,21 @@ class SignInActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initActionbar()
+        onCLick()
+    }
+
+    private fun onCLick() {
+        binding.apply {
+            btnSignIn.setOnClickListener {
+                startActivity(Intent(this@SignInActivity, MainActivity::class.java))
+            }
+            btnForgotPass.setOnClickListener {
+                startActivity(Intent(this@SignInActivity, ForgotPasswordActivity::class.java))
+            }
+            tbSignIn.setNavigationOnClickListener {
+                finish()
+            }
+        }
     }
 
     private fun initActionbar() {
