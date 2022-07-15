@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VIEFirebaseAuth">
         <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".SignUpActivity"
             android:exported="false" />
         <activity
