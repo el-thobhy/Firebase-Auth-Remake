@@ -1,10 +1,11 @@
 <resources>
-    <string name="app_name">Firebase Auth</string>
+    <string name="app_name">Firebase Auth Remake</string>
     <string name="error">Error</string>
     <string name="default_text">-</string>
     <string name="please_wait">Please_wait</string>
     <string name="success">Success</string>
-    <string name="web_client_id">402026833812-25tfhpl1dsodt26a667uekq102n76uf2.apps.googleusercontent.com</string>
+    <string name="web_client_id">1044290027079-fnjv5vtrq728jl131bor7fi2utbt431o.apps.googleusercontent.com</string>
+    <!--  web client id terdapat pada client_id pada google-services.json yang bagian client_type 3   -->
 
     <string name="facebook_app_id">5029381480455193</string>
     <string name="fb_login_protocol_scheme">fb5029381480455193</string>

@@ -1,31 +1,63 @@
 package com.elthobhy.viefirebaseauth
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.elthobhy.viefirebaseauth.databinding.ActivitySigninBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import java.util.regex.Pattern
+import com.google.firebase.auth.GoogleAuthProvider
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySigninBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var dialogLoading: AlertDialog
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySigninBinding.inflate(layoutInflater)
         firebaseAuth = FirebaseAuth.getInstance()
         dialogLoading = showDialogLoading(this)
+        initGoogleSignIn()
         setContentView(binding.root)
 
         initActionbar()
         onCLick()
+    }
+
+    private fun initGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.web_client_id))
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(this,gso)
+    }
+
+    private var resultLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result->
+        if(result.resultCode == Activity.RESULT_OK){
+                dialogLoading.show()
+                val data: Intent? = result.data
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                try {
+                    val account = task.getResult(ApiException::class.java)
+                    val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+                    signInToServer(credential)
+                }catch (e:ApiException){
+                    dialogLoading.dismiss()
+                    showDialogError(this,e.message.toString())
+                }
+        }
     }
 
     private fun onCLick() {
@@ -40,6 +72,10 @@ class SignInActivity : AppCompatActivity() {
             }
             btnForgotPass.setOnClickListener {
                 startActivity(Intent(this@SignInActivity, ForgotPasswordActivity::class.java))
+            }
+            btnGoogleSignIn.setOnClickListener {
+                val signInIntent = mGoogleSignInClient.signInIntent
+                resultLaunch.launch(signInIntent)
             }
             tbSignIn.setNavigationOnClickListener {
                 finish()
@@ -73,7 +109,7 @@ class SignInActivity : AppCompatActivity() {
         binding.apply {
             when{
                 email.isEmpty() -> {
-                    etEmailSignIn.error = "Pleasae Field Your Email"
+                    etEmailSignIn.error = "Please Field Your Email"
                     etEmailSignIn.requestFocus()
                 }
                 !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
