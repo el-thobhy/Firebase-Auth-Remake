@@ -7,9 +7,9 @@
     <string name="web_client_id">1044290027079-fnjv5vtrq728jl131bor7fi2utbt431o.apps.googleusercontent.com</string>
     <!--  web client id terdapat pada client_id pada google-services.json yang bagian client_type 3   -->
 
-    <string name="facebook_app_id">5029381480455193</string>
-    <string name="fb_login_protocol_scheme">fb5029381480455193</string>
-    <string name="facebook_client_token">a8a02ed7b864516d29260b7e654a02bb</string>
+    <string name="facebook_app_id">416019973897253</string>
+    <string name="fb_login_protocol_scheme">fb416019973897253</string>
+    <string name="facebook_client_token">271a16bf958d48c97acbdf9baa91a2a3</string>
 
 
 </resources>

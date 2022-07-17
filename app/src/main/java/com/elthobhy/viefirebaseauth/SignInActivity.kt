@@ -8,14 +8,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.elthobhy.viefirebaseauth.databinding.ActivitySigninBinding
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.*
 
 class SignInActivity : AppCompatActivity() {
 
@@ -23,6 +25,7 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var dialogLoading: AlertDialog
     private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private lateinit var callbackManager: CallbackManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +33,7 @@ class SignInActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         dialogLoading = showDialogLoading(this)
         initGoogleSignIn()
+        callbackManager = CallbackManager.Factory.create()
         setContentView(binding.root)
 
         initActionbar()
@@ -42,6 +46,11 @@ class SignInActivity : AppCompatActivity() {
             .requestEmail()
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        callbackManager.onActivityResult(requestCode,resultCode,data)
     }
 
     private var resultLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result->
@@ -73,6 +82,10 @@ class SignInActivity : AppCompatActivity() {
             btnForgotPass.setOnClickListener {
                 startActivity(Intent(this@SignInActivity, ForgotPasswordActivity::class.java))
             }
+            btnFacebookSignIn.setOnClickListener {
+                dialogLoading.show()
+                loginFacebook()
+            }
             btnGoogleSignIn.setOnClickListener {
                 val signInIntent = mGoogleSignInClient.signInIntent
                 resultLaunch.launch(signInIntent)
@@ -81,6 +94,29 @@ class SignInActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    private fun loginFacebook() {
+        LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
+        LoginManager.getInstance().registerCallback(callbackManager,
+        object : FacebookCallback<LoginResult>{
+            override fun onCancel() {
+                dialogLoading.dismiss()
+                showDialogError(this@SignInActivity,"Fail To Login")
+            }
+
+            override fun onError(error: FacebookException) {
+                dialogLoading.dismiss()
+                showDialogError(this@SignInActivity, error.message.toString())
+            }
+
+            override fun onSuccess(result: LoginResult) {
+                dialogLoading.dismiss()
+                val credential = FacebookAuthProvider.getCredential(result.accessToken.token)
+                signInToServer(credential)
+            }
+
+        })
     }
 
     private fun loginCredential(email: String, pass: String) {
